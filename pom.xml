@@ -1,18 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.zalando.stups.build</groupId>
         <artifactId>stups-parent</artifactId>
         <version>4</version>
     </parent>
-  <groupId>org.zalando.stups</groupId>
-  <artifactId>kio-client-java</artifactId>
-  <version>0.9.0-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <modules>
-      <module>kio-client-java-api</module>
-      <module>kio-client-java-spring</module>
-  </modules>
+    <groupId>org.zalando.stups</groupId>
+    <artifactId>kio-client-java</artifactId>
+    <version>0.9.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>kio-client-java-api</module>
+        <module>kio-client-java-spring</module>
+    </modules>
 
     <properties>
         <spring-boot.version>1.2.3.RELEASE</spring-boot.version>
@@ -41,4 +41,11 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <scm>
+        <connection>scm:git:https://github.com/zalando-stups/kio-client-java.git</connection>
+        <developerConnection>scm:git:https://github.com/zalando-stups/kio-client-java.git</developerConnection>
+        <url>https://github.com/zalando-stups/kio-client-java</url>
+        <tag>HEAD</tag>
+    </scm>
 </project>
