@@ -16,25 +16,31 @@
 package org.zalando.stups.clients.kio.spring;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+
 import static org.zalando.stups.clients.kio.spring.ResourceUtil.resource;
 
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.BaseOAuth2ProtectedResourceDetails;
+
 import org.springframework.test.web.client.MockRestServiceServer;
+
 import org.zalando.stups.clients.kio.Application;
 import org.zalando.stups.clients.kio.ApplicationBase;
 import org.zalando.stups.clients.kio.Version;
-import org.zalando.stups.clients.kio.spring.RestTemplateKioOperations;
 
 /**
  * @author  jbellmann
@@ -48,6 +54,8 @@ public class RestTemplateKioOperationsTest {
     private MockRestServiceServer mockServer;
 
     private RestTemplateKioOperations client;
+
+// private AccessTo
 
     @Before
     public void setUp() {
