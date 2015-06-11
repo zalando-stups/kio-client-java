@@ -28,18 +28,23 @@ import static org.zalando.stups.clients.kio.spring.ResourceUtil.resource;
 
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
+
 import org.junit.Before;
 import org.junit.Test;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.resource.BaseOAuth2ProtectedResourceDetails;
 
 import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.client.response.MockRestResponseCreators;
 
 import org.zalando.stups.clients.kio.Application;
 import org.zalando.stups.clients.kio.ApplicationBase;
+import org.zalando.stups.clients.kio.NotFoudException;
 import org.zalando.stups.clients.kio.Version;
 
 /**
@@ -64,6 +69,7 @@ public class RestTemplateKioOperationsTest {
         resource.setClientId("what_here");
 
         restTemplate = new OAuth2RestTemplate(resource);
+        restTemplate.setErrorHandler(new KioClientResponseErrorHandler());
         restTemplate.setAccessTokenProvider(new TestAccessTokenProvider("86c45354-8bc4-44bf-905f-5f34ebe0b599"));
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
 
@@ -111,6 +117,24 @@ public class RestTemplateKioOperationsTest {
         assertThat(version.getApplicationId()).isEqualTo("kio");
         assertThat(version.getId()).isEqualTo("1");
 
+
+        mockServer.verify();
+    }
+
+    @Test
+    public void getApplicationVersionNotFound() {
+        mockServer.expect(requestTo(baseUrl + "/apps/kio/versions/1"))
+                    .andExpect(method(GET))
+                    .andRespond(MockRestResponseCreators.withStatus(HttpStatus.NOT_FOUND));
+
+        Exception ex = null;
+        try{
+            Version version = client.getApplicationVersion("kio", "1");
+        }catch(NotFoudException e){
+            ex = e;
+        }
+
+        Assertions.assertThat(ex).isInstanceOf(NotFoudException.class);
 
         mockServer.verify();
     }
