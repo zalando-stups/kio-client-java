@@ -92,7 +92,7 @@ public class RestTemplateKioOperations implements KioOperations {
         uriVariables.put("applicationId", applicationId);
 
         //
-        return getRestOperations().getForObject(baseUrl + "/apps/{applicationId}", List.class, uriVariables);
+        return getRestOperations().getForObject(baseUrl + "/apps/{applicationId}/approvals", List.class, uriVariables);
     }
 
     @Override
@@ -139,7 +139,7 @@ public class RestTemplateKioOperations implements KioOperations {
         uriVariables.put("versionId", versionId);
 
         ResponseEntity<List<Approval>> response = getRestOperations().exchange(baseUrl
-                    + "/apps/{applicationId}/versions/{versionId}", HttpMethod.GET, null, approvalParameterizedType,
+                    + "/apps/{applicationId}/versions/{versionId}/approvals", HttpMethod.GET, null, approvalParameterizedType,
                 uriVariables);
 
         return response.getBody();
