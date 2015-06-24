@@ -40,6 +40,9 @@ public class Application extends ApplicationBase {
 
     private String description;
 
+    @JsonProperty("required_approvers")
+    private int requiredApprovers;
+
     public String getSpecificationUrl() {
         return specificationUrl;
     }
@@ -86,6 +89,14 @@ public class Application extends ApplicationBase {
 
     public void setDescription(final String description) {
         this.description = description;
+    }
+
+    public int getRequiredApprovers() {
+        return requiredApprovers;
+    }
+
+    public void setRequiredApprovers(int requiredApprovers) {
+        this.requiredApprovers = requiredApprovers;
     }
 
 }
