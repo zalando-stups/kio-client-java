@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.zalando.stups</groupId>
         <artifactId>kio-client-java</artifactId>
-        <version>0.9.4</version>
+        <version>0.9.5-SNAPSHOT</version>
     </parent>
     <artifactId>kio-client-java-spring</artifactId>
 

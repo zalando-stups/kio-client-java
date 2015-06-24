@@ -7,7 +7,7 @@
     </parent>
     <groupId>org.zalando.stups</groupId>
     <artifactId>kio-client-java</artifactId>
-    <version>0.9.4</version>
+    <version>0.9.5-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>kio-client-java-api</module>
@@ -46,6 +46,6 @@
         <connection>scm:git:https://github.com/zalando-stups/kio-client-java.git</connection>
         <developerConnection>scm:git:https://github.com/zalando-stups/kio-client-java.git</developerConnection>
         <url>https://github.com/zalando-stups/kio-client-java</url>
-        <tag>0.9.4</tag>
+        <tag>HEAD</tag>
     </scm>
 </project>
