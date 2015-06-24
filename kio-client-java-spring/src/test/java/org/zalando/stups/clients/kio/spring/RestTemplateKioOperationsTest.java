@@ -102,7 +102,7 @@ public class RestTemplateKioOperationsTest {
         Application application = client.getApplicationById("kio");
         assertThat(application).isNotNull();
         assertThat(application.getId()).isEqualTo("kio");
-
+        assertThat(application.getRequiredApprovers()).isEqualTo(12);
         mockServer.verify();
     }
 
