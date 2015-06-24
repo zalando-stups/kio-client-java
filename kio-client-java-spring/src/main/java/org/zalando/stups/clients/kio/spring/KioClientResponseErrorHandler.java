@@ -22,7 +22,7 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import org.springframework.web.client.DefaultResponseErrorHandler;
 
-import org.zalando.stups.clients.kio.NotFoudException;
+import org.zalando.stups.clients.kio.NotFoundException;
 
 /**
  * Just to transform '404' into {@link NotFoudException}.
@@ -35,7 +35,7 @@ public class KioClientResponseErrorHandler extends DefaultResponseErrorHandler {
     public void handleError(final ClientHttpResponse response) throws IOException {
         HttpStatus statusCode = response.getStatusCode();
         if (HttpStatus.NOT_FOUND.equals(statusCode)) {
-            throw new NotFoudException();
+            throw new NotFoundException();
         }
 
         super.handleError(response);

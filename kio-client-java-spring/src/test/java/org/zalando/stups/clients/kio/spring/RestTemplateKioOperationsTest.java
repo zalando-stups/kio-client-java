@@ -44,7 +44,7 @@ import org.springframework.test.web.client.response.MockRestResponseCreators;
 
 import org.zalando.stups.clients.kio.Application;
 import org.zalando.stups.clients.kio.ApplicationBase;
-import org.zalando.stups.clients.kio.NotFoudException;
+import org.zalando.stups.clients.kio.NotFoundException;
 import org.zalando.stups.clients.kio.Version;
 
 /**
@@ -130,11 +130,11 @@ public class RestTemplateKioOperationsTest {
         Exception ex = null;
         try{
             Version version = client.getApplicationVersion("kio", "1");
-        }catch(NotFoudException e){
+        }catch(NotFoundException e){
             ex = e;
         }
 
-        Assertions.assertThat(ex).isInstanceOf(NotFoudException.class);
+        Assertions.assertThat(ex).isInstanceOf(NotFoundException.class);
 
         mockServer.verify();
     }
