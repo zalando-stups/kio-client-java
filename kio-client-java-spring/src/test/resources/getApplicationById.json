@@ -8,5 +8,6 @@
   "scm_url": "https://github.com/zalando-stups/kio.git",
   "active": true,
   "service_url": "https://kio.example.com/",
-  "description": "Kio manages all application base information."
+  "description": "Kio manages all application base information.",
+  "required_approvers": 12
 }
