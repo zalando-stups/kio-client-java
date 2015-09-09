@@ -1,13 +1,20 @@
 {
+  "last_modified": "2015-07-29T15:00:00.000Z",
+  "description": "Kio the STUPS' application registry. It is the authoritative source of all applications that exist at Zalando Technology.",
+  "documentation_url": "https://stups.readthedocs.org/en/latest/components/kio.html",
   "specification_url": "https://github.com/zalando-stups/kio/issues",
-  "documentation_url": "https://github.com/zalando-stups/kio",
-  "team_id": "stups",
-  "id": "kio",
+  "publicly_accessible": false,
+  "service_url": "https://kio.example.org",
   "name": "Kio",
-  "subtitle": "Application Registry",
+  "criticality_level": 2,
+  "created": "2015-07-29T08:36:12.534+02:00",
   "scm_url": "https://github.com/zalando-stups/kio.git",
+  "last_modified_by": "admin",
+  "required_approvers": 12,
   "active": true,
-  "service_url": "https://kio.example.com/",
-  "description": "Kio manages all application base information.",
-  "required_approvers": 12
+  "id": "kio",
+  "subtitle": "Application Registry",
+  "team_id": "stups",
+  "created_by": "admin",
+  "specification_type": "Github"
 }

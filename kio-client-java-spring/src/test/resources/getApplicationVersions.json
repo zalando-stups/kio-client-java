@@ -1,0 +1,26 @@
+[
+  {
+    "id": "0.14.0",
+    "application_id": "kio",
+    "artifact": "docker.example.org/stups/kio:0.14.0",
+    "last_modified": "2015-08-01T00:00:00.000Z"
+  },
+  {
+    "id": "0.3.0",
+    "application_id": "kio",
+    "artifact": "docker.example.org/stups/kio:0.3.0",
+    "last_modified": "2015-07-01T00:00:00.000Z"
+  },
+  {
+    "id": "0.2.0",
+    "application_id": "kio",
+    "artifact": "docker.example.org/stups/kio:0.2.0",
+    "last_modified": "2015-06-01T00:00:00.000Z"
+  },
+  {
+    "id": "0.1.0",
+    "application_id": "kio",
+    "artifact": "docker.example.org/stups/kio:0.1.0",
+    "last_modified": "2015-05-01T00:00:00.000Z"
+  }
+]

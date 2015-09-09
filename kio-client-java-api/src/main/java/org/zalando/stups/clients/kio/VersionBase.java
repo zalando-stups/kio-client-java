@@ -15,6 +15,10 @@
  */
 package org.zalando.stups.clients.kio;
 
+import java.time.ZonedDateTime;
+
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -27,6 +31,9 @@ public class VersionBase {
     private String applicationId;
 
     private String artifact;
+
+    @JsonProperty("last_modified")
+    private ZonedDateTime lastModified;
 
     public String getId() {
         return id;
@@ -52,4 +59,25 @@ public class VersionBase {
         this.artifact = artifact;
     }
 
+    public ZonedDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(final ZonedDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    @Override
+    public String toString() {
+        final StringJoiner fields = new StringJoiner(", ", getClass().getSimpleName() + "{", "}");
+        addToStringFields(fields);
+        return fields.toString();
+    }
+
+    protected void addToStringFields(final StringJoiner fields) {
+        fields.add("id='" + id + '\'');
+        fields.add("applicationId='" + applicationId + '\'');
+        fields.add("artifact='" + artifact + '\'');
+        fields.add("lastModified=" + lastModified);
+    }
 }

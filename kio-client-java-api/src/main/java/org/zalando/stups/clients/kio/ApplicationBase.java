@@ -15,6 +15,10 @@
  */
 package org.zalando.stups.clients.kio;
 
+import java.time.ZonedDateTime;
+
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -36,8 +40,17 @@ public class ApplicationBase {
     @JsonProperty("service_url")
     private String serviceUrl;
 
-    @JsonProperty("matched_description")
-    private String matchedDescription;
+    @JsonProperty("scm_url")
+    private String scmUrl;
+
+    @JsonProperty("documentation_url")
+    private String documentationUrl;
+
+    @JsonProperty("specification_url")
+    private String specificationUrl;
+
+    @JsonProperty("last_modified")
+    private ZonedDateTime lastModified;
 
     public String getId() {
         return id;
@@ -79,12 +92,55 @@ public class ApplicationBase {
         this.serviceUrl = serviceUrl;
     }
 
-    public String getMatchedDescription() {
-        return matchedDescription;
+    public String getScmUrl() {
+        return scmUrl;
     }
 
-    public void setMatchedDescription(final String matchedDescription) {
-        this.matchedDescription = matchedDescription;
+    public void setScmUrl(final String scmUrl) {
+        this.scmUrl = scmUrl;
+    }
+
+    public String getDocumentationUrl() {
+        return documentationUrl;
+    }
+
+    public void setDocumentationUrl(final String documentationUrl) {
+        this.documentationUrl = documentationUrl;
+    }
+
+    public String getSpecificationUrl() {
+        return specificationUrl;
+    }
+
+    public void setSpecificationUrl(final String specificationUrl) {
+        this.specificationUrl = specificationUrl;
+    }
+
+    public ZonedDateTime getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(final ZonedDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
+
+    @Override
+    public String toString() {
+        final StringJoiner fields = new StringJoiner(", ", getClass().getSimpleName() + "{", "}");
+        addToStringFields(fields);
+        return fields.toString();
+    }
+
+    protected void addToStringFields(final StringJoiner fields) {
+        fields.add("id='" + id + '\'');
+        fields.add("teamId='" + teamId + '\'');
+        fields.add("name='" + name + '\'');
+        fields.add("subtitle='" + subtitle + '\'');
+        fields.add("serviceUrl='" + serviceUrl + '\'');
+        fields.add("scmUrl='" + scmUrl + '\'');
+        fields.add("documentationUrl='" + documentationUrl + '\'');
+        fields.add("specificationUrl='" + specificationUrl + '\'');
+        fields.add("lastModified=" + lastModified);
     }
 
 }

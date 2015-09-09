@@ -15,7 +15,12 @@
  */
 package org.zalando.stups.clients.kio;
 
+import java.time.ZonedDateTime;
+
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author  jbellmann
@@ -23,7 +28,39 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Version extends VersionBase {
 
+    @JsonProperty("last_modified_by")
+    private String lastModifiedBy;
+
+    private ZonedDateTime created;
+
+    @JsonProperty("created_by")
+    private String createdBy;
+
     private String notes;
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(final String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public ZonedDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(final ZonedDateTime created) {
+        this.created = created;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(final String createdBy) {
+        this.createdBy = createdBy;
+    }
 
     public String getNotes() {
         return notes;
@@ -33,4 +70,12 @@ public class Version extends VersionBase {
         this.notes = notes;
     }
 
+    @Override
+    protected void addToStringFields(final StringJoiner fields) {
+        super.addToStringFields(fields);
+        fields.add("lastModifiedBy='" + lastModifiedBy + '\'');
+        fields.add("created=" + created);
+        fields.add("createdBy='" + createdBy + '\'');
+        fields.add("notes='" + notes + '\'');
+    }
 }

@@ -15,91 +15,167 @@
  */
 package org.zalando.stups.clients.kio.spring;
 
+import static java.lang.String.format;
+
+import static java.time.ZonedDateTime.now;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
+import static org.zalando.stups.clients.kio.spring.DateTimeUtils.toIsoString;
 import static org.zalando.stups.clients.kio.spring.ResourceUtil.resource;
 
-import java.util.List;
+import java.text.ParseException;
 
-import org.assertj.core.api.Assertions;
+import java.time.ZonedDateTime;
+
+import java.util.List;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.slf4j.Logger;
 
-import org.springframework.security.oauth2.client.OAuth2RestTemplate;
-import org.springframework.security.oauth2.client.resource.BaseOAuth2ProtectedResourceDetails;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.test.web.client.response.MockRestResponseCreators;
+
+import org.springframework.web.client.RestTemplate;
 
 import org.zalando.stups.clients.kio.Application;
 import org.zalando.stups.clients.kio.ApplicationBase;
+import org.zalando.stups.clients.kio.ApplicationSearchResult;
+import org.zalando.stups.clients.kio.Approval;
+import org.zalando.stups.clients.kio.ApprovalBase;
 import org.zalando.stups.clients.kio.NotFoundException;
 import org.zalando.stups.clients.kio.Version;
+import org.zalando.stups.clients.kio.VersionBase;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author  jbellmann
  */
 public class RestTemplateKioOperationsTest {
 
-    private final String baseUrl = "http://localhost:8080";
+    private static final String BASE_URL = "http://localhost:8080";
 
-    private OAuth2RestTemplate restTemplate;
+    private final Logger log = getLogger(getClass());
 
     private MockRestServiceServer mockServer;
 
     private RestTemplateKioOperations client;
 
-// private AccessTo
-
     @Before
     public void setUp() {
+        final ObjectMapper om = new ObjectMapper();
+        om.findAndRegisterModules();
 
-        BaseOAuth2ProtectedResourceDetails resource = new BaseOAuth2ProtectedResourceDetails();
-        resource.setClientId("what_here");
-
-        restTemplate = new OAuth2RestTemplate(resource);
+        final RestTemplate restTemplate = new RestTemplate();
         restTemplate.setErrorHandler(new KioClientResponseErrorHandler());
-        restTemplate.setAccessTokenProvider(new TestAccessTokenProvider("86c45354-8bc4-44bf-905f-5f34ebe0b599"));
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        restTemplate.setMessageConverters(singletonList(new MappingJackson2HttpMessageConverter(om)));
 
-        client = new RestTemplateKioOperations(restTemplate, baseUrl);
+        client = new RestTemplateKioOperations(restTemplate, BASE_URL);
 
         mockServer = MockRestServiceServer.createServer(restTemplate);
     }
 
-    //J-
     @Test
-    public void getRefoles() {
-        mockServer.expect(requestTo(baseUrl + "/apps"))
-                    .andExpect(method(GET))
-                    .andRespond(withSuccess(resource("/getApplications"), APPLICATION_JSON));
+    public void testGetAllApplications() {
+        mockServer.expect(requestTo(BASE_URL + "/apps")) //
+                  .andExpect(method(GET))                //
+                  .andRespond(withSuccess(resource("/getApplications"), APPLICATION_JSON));
 
-        List<ApplicationBase> resultLists = client.listApplications();
-        assertThat(resultLists).isNotNull();
-        assertThat(resultLists).isNotEmpty();
-        assertThat(resultLists.size()).isEqualTo(1);
+        final List<ApplicationBase> results = client.listApplications();
+        log.debug("Results: {}", results);
+        assertThat(results).hasSize(2);
+
+        mockServer.verify();
+    }
+
+    @Test
+    public void testGetRangeOfApplications() throws ParseException {
+        final ZonedDateTime modifiedBefore = now().plusDays(1);
+        final ZonedDateTime modifiedAfter = now().minusDays(2);
+
+        mockServer.expect(requestTo(
+                          format("%s/apps?modified_before=%s&modified_after=%s", //
+                              BASE_URL, toIsoString(modifiedBefore), toIsoString(modifiedAfter)))) //
+                  .andExpect(method(GET)) //
+                  .andRespond(withSuccess(resource("/getApplications"), APPLICATION_JSON));
+
+        final List<ApplicationBase> results = client.listApplications(Optional.of(modifiedBefore),
+                Optional.of(modifiedAfter));
+
+        log.debug("Results: {}", results);
+        assertThat(results).hasSize(2);
+
+        mockServer.verify();
+    }
+
+    @Test
+    public void testSearchApplications() throws Exception {
+        final String query = "foobar";
+
+        mockServer.expect(requestTo(BASE_URL + "/apps?search=" + query)) //
+                  .andExpect(method(GET))                                //
+                  .andRespond(withSuccess(resource("/searchApplications"), APPLICATION_JSON));
+
+        final List<ApplicationSearchResult> results = client.searchApplications(query, Optional.<ZonedDateTime>empty(),
+                Optional.<ZonedDateTime>empty());
+        log.debug("Results: {}", results);
+        assertThat(results).hasSize(2);
+
+        mockServer.verify();
+    }
+
+    @Test
+    public void testSearchApplicationsInRange() throws Exception {
+        final String query = "foobar";
+        final ZonedDateTime modifiedBefore = now().plusDays(1);
+        final ZonedDateTime modifiedAfter = now().minusDays(2);
+
+        mockServer.expect(requestTo(
+                          BASE_URL + "/apps?search=" + query + "&modified_before=" + toIsoString(modifiedBefore)
+                              + "&modified_after=" + toIsoString(modifiedAfter))) //
+                  .andExpect(method(GET))                               //
+                  .andRespond(withSuccess(resource("/searchApplications"), APPLICATION_JSON));
+
+        final List<ApplicationSearchResult> results = client.searchApplications(query, Optional.of(modifiedBefore),
+                Optional.of(modifiedAfter));
+        log.debug("Results: {}", results);
+        assertThat(results).hasSize(2);
 
         mockServer.verify();
     }
 
     @Test
     public void getApplicationById() {
-        mockServer.expect(requestTo(baseUrl + "/apps/kio"))
-                    .andExpect(method(GET))
-                    .andRespond(withSuccess(resource("/getApplicationById"), APPLICATION_JSON));
+        mockServer.expect(requestTo(BASE_URL + "/apps/kio")) //
+                  .andExpect(method(GET))                    //
+                  .andRespond(withSuccess(resource("/getApplicationById"), APPLICATION_JSON));
 
-        Application application = client.getApplicationById("kio");
+        final Application application = client.getApplicationById("kio");
         assertThat(application).isNotNull();
         assertThat(application.getId()).isEqualTo("kio");
         assertThat(application.getRequiredApprovers()).isEqualTo(12);
@@ -107,37 +183,84 @@ public class RestTemplateKioOperationsTest {
     }
 
     @Test
+    public void testGetApplicationVersions() throws Exception {
+        mockServer.expect(requestTo(BASE_URL + "/apps/kio/versions")) //
+                  .andExpect(method(GET))                             //
+                  .andRespond(withSuccess(resource("/getApplicationVersions"), APPLICATION_JSON));
+
+        final List<VersionBase> results = client.getApplicationVersions("kio");
+        log.debug("getApplicationVersions Results: {}", results);
+        assertThat(results).hasSize(4);
+
+        mockServer.verify();
+    }
+
+    @Test
     public void getApplicationVersion() {
-        mockServer.expect(requestTo(baseUrl + "/apps/kio/versions/1"))
-                    .andExpect(method(GET))
-                    .andRespond(withSuccess(resource("/getApplicationVersion"), APPLICATION_JSON));
+        mockServer.expect(requestTo(BASE_URL + "/apps/kio/versions/1")) //
+                  .andExpect(method(GET))                               //
+                  .andRespond(withSuccess(resource("/getApplicationVersion"), APPLICATION_JSON));
 
         Version version = client.getApplicationVersion("kio", "1");
         assertThat(version).isNotNull();
         assertThat(version.getApplicationId()).isEqualTo("kio");
         assertThat(version.getId()).isEqualTo("1");
 
-
         mockServer.verify();
     }
 
     @Test
     public void getApplicationVersionNotFound() {
-        mockServer.expect(requestTo(baseUrl + "/apps/kio/versions/1"))
-                    .andExpect(method(GET))
-                    .andRespond(MockRestResponseCreators.withStatus(HttpStatus.NOT_FOUND));
+        mockServer.expect(requestTo(BASE_URL + "/apps/kio/versions/1")) //
+                  .andExpect(method(GET))                               //
+                  .andRespond(withStatus(NOT_FOUND));
 
-        Exception ex = null;
-        try{
-            Version version = client.getApplicationVersion("kio", "1");
-        }catch(NotFoundException e){
-            ex = e;
-        }
-
-        Assertions.assertThat(ex).isInstanceOf(NotFoundException.class);
+        try {
+            client.getApplicationVersion("kio", "1");
+            failBecauseExceptionWasNotThrown(NotFoundException.class);
+        } catch (final NotFoundException ignore) { }
 
         mockServer.verify();
     }
-    //J+
 
+    @Test
+    public void testGetApplicationApprovals() throws Exception {
+        mockServer.expect(requestTo(BASE_URL + "/apps/hello-world/approvals")) //
+                  .andExpect(method(GET))                                      //
+                  .andRespond(withSuccess("[\"SPECIFICATION\",\"CODE_CHANGE\",\"TEST\",\"DEPLOY\"]", APPLICATION_JSON));
+
+        final List<String> result = client.getApplicationApprovalTypes("hello-world");
+        assertThat(result).isEqualTo(asList("SPECIFICATION", "CODE_CHANGE", "TEST", "DEPLOY"));
+
+        mockServer.verify();
+    }
+
+    @Test
+    public void testGetApplicationVersionApprovals() throws Exception {
+        mockServer.expect(requestTo(BASE_URL + "/apps/kio/versions/0.14.0/approvals")) //
+                  .andExpect(method(GET))                                              //
+                  .andRespond(withSuccess(resource("/getApplicationVersionApprovals"), APPLICATION_JSON));
+
+        final List<Approval> results = client.getApplicationVersionApprovals("kio", "0.14.0");
+        assertThat(results).hasSize(5);
+
+        mockServer.verify();
+    }
+
+    @Test
+    public void testApproveApplicationVersion() throws Exception {
+        mockServer.expect(requestTo(BASE_URL + "/apps/kio/versions/1.0/approvals")) //
+                  .andExpect(method(POST))                                          //
+                  .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON)) //
+                  .andExpect(jsonPath("$.approval_type").value("DEPLOY"))           //
+                  .andExpect(jsonPath("$.notes").value("bla bla bla"))              //
+                  .andRespond(withSuccess());
+
+        final ApprovalBase request = new ApprovalBase();
+        request.setApprovalType("DEPLOY");
+        request.setNotes("bla bla bla");
+        client.approveApplicationVersion(request, "kio", "1.0");
+
+        mockServer.verify();
+    }
 }

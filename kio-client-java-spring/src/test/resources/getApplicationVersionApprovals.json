@@ -1,0 +1,42 @@
+[
+  {
+    "application_id": "kio",
+    "version_id": "0.14.0",
+    "approval_type": "SPECIFICATION",
+    "user_id": "product-owner",
+    "approved_at": "2015-08-17T13:48:15.530Z",
+    "notes": ""
+  },
+  {
+    "application_id": "kio",
+    "version_id": "0.14.0",
+    "approval_type": "CODE_CHANGE",
+    "user_id": "lead-developer",
+    "approved_at": "2015-07-29T15:57:04.729Z",
+    "notes": ""
+  },
+  {
+    "application_id": "kio",
+    "version_id": "0.14.0",
+    "approval_type": "DEPLOY",
+    "user_id": "product-owner",
+    "approved_at": "2015-07-29T15:57:07.611Z",
+    "notes": ""
+  },
+  {
+    "application_id": "kio",
+    "version_id": "0.14.0",
+    "approval_type": "DEPLOY",
+    "user_id": "lead-developer",
+    "approved_at": "2015-07-29T15:57:07.611Z",
+    "notes": ""
+  },
+  {
+    "application_id": "kio",
+    "version_id": "0.14.0",
+    "approval_type": "TEST",
+    "user_id": "developer",
+    "approved_at": "2015-07-29T15:57:06.197Z",
+    "notes": ""
+  }
+]

@@ -15,40 +15,49 @@
  */
 package org.zalando.stups.clients.kio;
 
+import java.time.ZonedDateTime;
+
 import java.util.List;
+import java.util.Optional;
 
 public interface KioOperations {
 
     /**
-     * Returns a list of registered applications in Kio.
+     * Returns a list of registered applications in Kio. This is equivalent to<br />
+     * <code>listApplications(Optional.empty(), Optional.empty())</code>
      *
      * @return  {@link ApplicationBase} subset of {@link Application}.
      */
     List<ApplicationBase> listApplications();
 
     /**
+     * Returns a list of registered applications in Kio. Optionally, the result can be filtered to show only apps, that
+     * have been modified within a certain range in time.
+     *
+     * @return  {@link ApplicationBase} subset of {@link Application}.
+     */
+    List<ApplicationBase> listApplications(Optional<ZonedDateTime> modifiedBefore,
+            Optional<ZonedDateTime> modifiedAfter);
+
+    List<ApplicationSearchResult> searchApplications(String query, Optional<ZonedDateTime> modifiedBefore,
+            Optional<ZonedDateTime> modifiedAfter);
+
+    /**
      * Returns an application for the given applicationId.
      *
-     * @param   applicationId
-     *
-     * @return  {@link Application}
+     * @return  an {@link Application}
      */
     Application getApplicationById(String applicationId);
 
     /**
      * Creates or updates an application.
-     *
-     * @param  request
-     * @param  id
      */
     void createOrUpdateApplication(CreateOrUpdateApplicationRequest request, String applicationId);
 
     /**
-     * Returns a list of all approval-names for the specified applicationId.
-     *
-     * @return
+     * Returns a list of all approval types for the specified applicationId.
      */
-    List<String> getApplicationApprovals(String applicationId);
+    List<String> getApplicationApprovalTypes(String applicationId);
 
     List<VersionBase> getApplicationVersions(String applicationId);
 
@@ -56,7 +65,7 @@ public interface KioOperations {
 
     void createOrUpdateVersion(CreateOrUpdateVersionRequest request, String applicationId, String versionId);
 
-    List<Approval> getApplicationApprovals(String applicationId, String versionId);
+    List<Approval> getApplicationVersionApprovals(String applicationId, String versionId);
 
     void approveApplicationVersion(ApprovalBase request, String applicationId, String versionId);
 

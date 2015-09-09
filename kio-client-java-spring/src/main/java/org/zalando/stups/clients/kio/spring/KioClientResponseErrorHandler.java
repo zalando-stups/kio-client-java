@@ -25,7 +25,7 @@ import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.zalando.stups.clients.kio.NotFoundException;
 
 /**
- * Just to transform '404' into {@link NotFoudException}.
+ * Just to transform '404' into {@link NotFoundException}.
  *
  * @author  jbellmann
  */

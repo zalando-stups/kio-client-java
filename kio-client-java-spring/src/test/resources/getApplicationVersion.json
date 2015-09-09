@@ -1,6 +1,10 @@
 {
-  "id": 1,
+  "id": "1",
   "application_id": "kio",
-  "artifact": "docker://stups/kio:1.0",
-  "notes": "**Release 1.0**\n\n* initial commit\n* bugfixes\n"
+  "artifact": "docker.example.org/stups/kio:0.14.0",
+  "notes": "**Release 1.0**\n\n* initial commit\n* bugfixes\n",
+  "created": "2015-07-29T15:08:46.626+00:00",
+  "created_by": "developer",
+  "last_modified": "2015-07-29T15:08:46.626+00:00",
+  "last_modified_by": "developer"
 }

@@ -15,6 +15,10 @@
  */
 package org.zalando.stups.clients.kio;
 
+import java.time.ZonedDateTime;
+
+import java.util.StringJoiner;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -24,48 +28,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Application extends ApplicationBase {
 
-    @JsonProperty("specification_url")
-    private String specificationUrl;
-
-    @JsonProperty("documentation_url")
-    private String documentationUrl;
-
-    @JsonProperty("scm_url")
-    private String scmUrl;
-
     private boolean active;
-
-    @JsonProperty("service_url")
-    private String serviceUrl;
 
     private String description;
 
     @JsonProperty("required_approvers")
     private int requiredApprovers;
 
-    public String getSpecificationUrl() {
-        return specificationUrl;
-    }
+    @JsonProperty("specification_type")
+    private String specificationType;
 
-    public void setSpecificationUrl(final String specificationUrl) {
-        this.specificationUrl = specificationUrl;
-    }
+    @JsonProperty("criticality_level")
+    private int criticalityLevel;
 
-    public String getDocumentationUrl() {
-        return documentationUrl;
-    }
+    @JsonProperty("last_modified_by")
+    private String lastModifiedBy;
 
-    public void setDocumentationUrl(final String documentationUrl) {
-        this.documentationUrl = documentationUrl;
-    }
+    private ZonedDateTime created;
 
-    public String getScmUrl() {
-        return scmUrl;
-    }
+    @JsonProperty("created_by")
+    private String createdBy;
 
-    public void setScmUrl(final String scmUrl) {
-        this.scmUrl = scmUrl;
-    }
+    @JsonProperty("publicly_accessible")
+    private boolean publiclyAccessible;
 
     public boolean isActive() {
         return active;
@@ -73,14 +58,6 @@ public class Application extends ApplicationBase {
 
     public void setActive(final boolean active) {
         this.active = active;
-    }
-
-    public String getServiceUrl() {
-        return serviceUrl;
-    }
-
-    public void setServiceUrl(final String serviceUrl) {
-        this.serviceUrl = serviceUrl;
     }
 
     public String getDescription() {
@@ -95,8 +72,69 @@ public class Application extends ApplicationBase {
         return requiredApprovers;
     }
 
-    public void setRequiredApprovers(int requiredApprovers) {
+    public void setRequiredApprovers(final int requiredApprovers) {
         this.requiredApprovers = requiredApprovers;
     }
 
+    public String getSpecificationType() {
+        return specificationType;
+    }
+
+    public void setSpecificationType(final String specificationType) {
+        this.specificationType = specificationType;
+    }
+
+    public int getCriticalityLevel() {
+        return criticalityLevel;
+    }
+
+    public void setCriticalityLevel(final int criticalityLevel) {
+        this.criticalityLevel = criticalityLevel;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(final String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public ZonedDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(final ZonedDateTime created) {
+        this.created = created;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(final String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public boolean isPubliclyAccessible() {
+        return publiclyAccessible;
+    }
+
+    public void setPubliclyAccessible(final boolean publiclyAccessible) {
+        this.publiclyAccessible = publiclyAccessible;
+    }
+
+    @Override
+    protected void addToStringFields(final StringJoiner fields) {
+        super.addToStringFields(fields);
+        fields.add("active=" + active);
+        fields.add("description='" + description + '\'');
+        fields.add("requiredApprovers=" + requiredApprovers);
+        fields.add("specificationType='" + specificationType + '\'');
+        fields.add("criticalityLevel=" + criticalityLevel);
+        fields.add("lastModifiedBy='" + lastModifiedBy + '\'');
+        fields.add("created=" + created);
+        fields.add("createdBy='" + createdBy + '\'');
+        fields.add("publiclyAccessible=" + publiclyAccessible);
+    }
 }

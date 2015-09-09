@@ -15,20 +15,28 @@
  */
 package org.zalando.stups.clients.kio.spring;
 
-import java.util.HashMap;
+import static org.springframework.http.RequestEntity.get;
+
+import static org.zalando.stups.clients.kio.spring.DateTimeUtils.toIsoString;
+
+import java.net.URI;
+
+import java.time.ZonedDateTime;
+
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.core.ParameterizedTypeReference;
 
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import org.zalando.stups.clients.kio.Application;
 import org.zalando.stups.clients.kio.ApplicationBase;
+import org.zalando.stups.clients.kio.ApplicationSearchResult;
 import org.zalando.stups.clients.kio.Approval;
 import org.zalando.stups.clients.kio.ApprovalBase;
 import org.zalando.stups.clients.kio.CreateOrUpdateApplicationRequest;
@@ -44,18 +52,24 @@ import org.zalando.stups.clients.kio.VersionBase;
  */
 public class RestTemplateKioOperations implements KioOperations {
 
+    public static final ParameterizedTypeReference<List<String>> AS_STRING_LIST =
+        new ParameterizedTypeReference<List<String>>() { };
+
+    private static final ParameterizedTypeReference<List<ApplicationBase>> AS_APP_BASE_LIST =
+        new ParameterizedTypeReference<List<ApplicationBase>>() { };
+
+    private static final ParameterizedTypeReference<List<ApplicationSearchResult>> AS_APP_SEARCH_RESULT_LIST =
+        new ParameterizedTypeReference<List<ApplicationSearchResult>>() { };
+
+    private static final ParameterizedTypeReference<List<VersionBase>> AS_VERSION_LIST =
+        new ParameterizedTypeReference<List<VersionBase>>() { };
+
+    private static final ParameterizedTypeReference<List<Approval>> AS_APPROVAL_LIST =
+        new ParameterizedTypeReference<List<Approval>>() { };
+
     private final RestOperations restOperations;
 
     private final String baseUrl;
-
-    private final ParameterizedTypeReference<List<ApplicationBase>> applicationBaseParameterizedType =
-        new ParameterizedTypeReference<List<ApplicationBase>>() { };
-
-    private final ParameterizedTypeReference<List<VersionBase>> versionBaseParameterizedType =
-        new ParameterizedTypeReference<List<VersionBase>>() { };
-
-    private final ParameterizedTypeReference<List<Approval>> approvalParameterizedType =
-        new ParameterizedTypeReference<List<Approval>>() { };
 
     public RestTemplateKioOperations(final RestOperations restOperations, final String baseUrl) {
         this.restOperations = restOperations;
@@ -64,96 +78,105 @@ public class RestTemplateKioOperations implements KioOperations {
 
     @Override
     public List<ApplicationBase> listApplications() {
-        ResponseEntity<List<ApplicationBase>> response = getRestOperations().exchange(baseUrl + "/apps", HttpMethod.GET,
-                null, applicationBaseParameterizedType);
+        return listApplications(Optional.<ZonedDateTime>empty(), Optional.<ZonedDateTime>empty());
+    }
 
-        return response.getBody();
+    @Override
+    public List<ApplicationBase> listApplications(final Optional<ZonedDateTime> modifiedBefore,
+            final Optional<ZonedDateTime> modifiedAfter) {
+        final UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl).pathSegment("apps");
+        modifiedBefore.ifPresent((timestamp) -> uriBuilder.queryParam("modified_before", toIsoString(timestamp)));
+        modifiedAfter.ifPresent((timestamp) -> uriBuilder.queryParam("modified_after", toIsoString(timestamp)));
+
+        final URI uri = uriBuilder.build().toUri();
+        return getRestOperations().exchange(get(uri).build(), AS_APP_BASE_LIST).getBody();
+    }
+
+    @Override
+    public List<ApplicationSearchResult> searchApplications(final String query,
+            final Optional<ZonedDateTime> modifiedBefore, final Optional<ZonedDateTime> modifiedAfter) {
+        Assert.hasText(query, "search query must not be blank");
+
+        final UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl).pathSegment("apps");
+        uriBuilder.queryParam("search", query);
+        modifiedBefore.ifPresent((timestamp) -> uriBuilder.queryParam("modified_before", toIsoString(timestamp)));
+        modifiedAfter.ifPresent((timestamp) -> uriBuilder.queryParam("modified_after", toIsoString(timestamp)));
+
+        final URI uri = uriBuilder.build().toUri();
+        return getRestOperations().exchange(get(uri).build(), AS_APP_SEARCH_RESULT_LIST).getBody();
     }
 
     @Override
     public Application getApplicationById(final String applicationId) {
-        Map<String, String> uriVariables = new HashMap<String, String>();
-        uriVariables.put("applicationId", applicationId);
+        Assert.hasText(applicationId, "applicationId must not be blank");
 
-        return getRestOperations().getForObject(baseUrl + "/apps/{applicationId}", Application.class, uriVariables);
+        return getRestOperations().getForObject(URI.create(baseUrl + "/apps/" + applicationId), Application.class);
     }
 
     @Override
     public void createOrUpdateApplication(final CreateOrUpdateApplicationRequest request, final String applicationId) {
-        Map<String, String> uriVariables = new HashMap<String, String>();
-        uriVariables.put("applicationId", applicationId);
 
-        getRestOperations().put(baseUrl + "/apps/{applicationId}", request);
+        // final Map<String, String> uriVariables = new HashMap<>();
+        // uriVariables.put("applicationId", applicationId);
+        // getRestOperations().put(baseUrl + "/apps/{applicationId}", request, uriVariables);
+        throw new UnsupportedOperationException("not yet implemented");
     }
 
     @Override
-    public List<String> getApplicationApprovals(final String applicationId) {
-        Map<String, String> uriVariables = new HashMap<String, String>();
-        uriVariables.put("applicationId", applicationId);
+    public List<String> getApplicationApprovalTypes(final String applicationId) {
+        Assert.hasText(applicationId, "applicationId must not be blank");
 
-        //
-        return getRestOperations().getForObject(baseUrl + "/apps/{applicationId}/approvals", List.class, uriVariables);
+        final URI uri = URI.create(baseUrl + "/apps/" + applicationId + "/approvals");
+        return getRestOperations().exchange(get(uri).build(), AS_STRING_LIST).getBody();
     }
 
     @Override
     public List<VersionBase> getApplicationVersions(final String applicationId) {
+        Assert.hasText(applicationId, "applicationId must not be blank");
 
-        Map<String, String> uriVariables = new HashMap<String, String>();
-        uriVariables.put("applicationId", applicationId);
-
-        ResponseEntity<List<VersionBase>> response = getRestOperations().exchange(baseUrl
-                    + "/apps/{applicationId}/versions", HttpMethod.GET, null, versionBaseParameterizedType,
-                uriVariables);
-
-        return response.getBody();
-
+        final URI uri = URI.create(baseUrl + "/apps/" + applicationId + "/versions");
+        return getRestOperations().exchange(get(uri).build(), AS_VERSION_LIST).getBody();
     }
 
     @Override
     public Version getApplicationVersion(final String applicationId, final String versionId) {
+        Assert.hasText(applicationId, "applicationId must not be blank");
+        Assert.hasText(versionId, "versionId must not be blank");
 
-        Map<String, String> uriVariables = new HashMap<String, String>();
-        uriVariables.put("applicationId", applicationId);
-        uriVariables.put("versionId", versionId);
-
-        return getRestOperations().getForObject(baseUrl + "/apps/{applicationId}/versions/{versionId}", Version.class,
-                uriVariables);
+        final URI uri = URI.create(baseUrl + "/apps/" + applicationId + "/versions/" + versionId);
+        return getRestOperations().getForObject(uri, Version.class);
     }
 
     @Override
     public void createOrUpdateVersion(final CreateOrUpdateVersionRequest request, final String applicationId,
             final String versionId) {
 
-        Map<String, String> uriVariables = new HashMap<String, String>();
-        uriVariables.put("applicationId", applicationId);
-        uriVariables.put("versionId", versionId);
-
-        getRestOperations().put(baseUrl + "/apps/{applicationId}/versions/{versionId}", request, uriVariables);
+        //
+        // Map<String, String> uriVariables = new HashMap<String, String>();
+        // uriVariables.put("applicationId", applicationId);
+        // uriVariables.put("versionId", versionId);
+        //
+        // getRestOperations().put(baseUrl + "/apps/{applicationId}/versions/{versionId}", request, uriVariables);
+        throw new UnsupportedOperationException("not yet implemented");
     }
 
     @Override
-    public List<Approval> getApplicationApprovals(final String applicationId, final String versionId) {
+    public List<Approval> getApplicationVersionApprovals(final String applicationId, final String versionId) {
+        Assert.hasText(applicationId, "applicationId must not be blank");
+        Assert.hasText(versionId, "versionId must not be blank");
 
-        Map<String, String> uriVariables = new HashMap<String, String>();
-        uriVariables.put("applicationId", applicationId);
-        uriVariables.put("versionId", versionId);
-
-        ResponseEntity<List<Approval>> response = getRestOperations().exchange(baseUrl
-                    + "/apps/{applicationId}/versions/{versionId}/approvals", HttpMethod.GET, null, approvalParameterizedType,
-                uriVariables);
-
-        return response.getBody();
+        final URI uri = URI.create(baseUrl + "/apps/" + applicationId + "/versions/" + versionId + "/approvals");
+        return getRestOperations().exchange(get(uri).build(), AS_APPROVAL_LIST).getBody();
     }
 
     @Override
     public void approveApplicationVersion(final ApprovalBase request, final String applicationId,
             final String versionId) {
+        Assert.hasText(applicationId, "applicationId must not be blank");
+        Assert.hasText(versionId, "versionId must not be blank");
 
-        Map<String, String> uriVariables = new HashMap<String, String>();
-        uriVariables.put("applicationId", applicationId);
-        uriVariables.put("versionId", versionId);
-
-        getRestOperations().put(baseUrl + "/apps/{applicationId}/versions/{versionsId}", request, uriVariables);
+        final URI uri = URI.create(baseUrl + "/apps/" + applicationId + "/versions/" + versionId + "/approvals");
+        getRestOperations().postForObject(uri, request, Void.class);
     }
 
     protected RestOperations getRestOperations() {
