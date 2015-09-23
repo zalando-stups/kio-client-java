@@ -15,35 +15,22 @@
  */
 package org.zalando.stups.clients.kio.spring;
 
-import static org.springframework.http.RequestEntity.get;
-
-import static org.zalando.stups.clients.kio.spring.DateTimeUtils.toIsoString;
-
-import java.net.URI;
-
-import java.time.ZonedDateTime;
-
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.core.ParameterizedTypeReference;
-
 import org.springframework.util.Assert;
-
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.zalando.stups.clients.kio.*;
 
-import org.zalando.stups.clients.kio.Application;
-import org.zalando.stups.clients.kio.ApplicationBase;
-import org.zalando.stups.clients.kio.ApplicationSearchResult;
-import org.zalando.stups.clients.kio.Approval;
-import org.zalando.stups.clients.kio.ApprovalBase;
-import org.zalando.stups.clients.kio.CreateOrUpdateApplicationRequest;
-import org.zalando.stups.clients.kio.CreateOrUpdateVersionRequest;
-import org.zalando.stups.clients.kio.KioOperations;
-import org.zalando.stups.clients.kio.Version;
-import org.zalando.stups.clients.kio.VersionBase;
+import java.net.URI;
+import java.time.ZonedDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static org.springframework.http.RequestEntity.get;
+import static org.zalando.stups.clients.kio.spring.DateTimeUtils.toIsoString;
 
 /**
  * Implementation of {@link KioOperations} that uses Springs {@link RestTemplate}.
@@ -116,10 +103,11 @@ public class RestTemplateKioOperations implements KioOperations {
     @Override
     public void createOrUpdateApplication(final CreateOrUpdateApplicationRequest request, final String applicationId) {
 
-        // final Map<String, String> uriVariables = new HashMap<>();
-        // uriVariables.put("applicationId", applicationId);
-        // getRestOperations().put(baseUrl + "/apps/{applicationId}", request, uriVariables);
-        throw new UnsupportedOperationException("not yet implemented");
+        Assert.hasText(applicationId, "applicationId must not be blank");
+
+        final Map<String, String> uriVariables = new HashMap<>();
+        uriVariables.put("applicationId", applicationId);
+        getRestOperations().put(baseUrl + "/apps/{applicationId}", request, uriVariables);
     }
 
     @Override
@@ -150,14 +138,14 @@ public class RestTemplateKioOperations implements KioOperations {
     @Override
     public void createOrUpdateVersion(final CreateOrUpdateVersionRequest request, final String applicationId,
             final String versionId) {
+        Assert.hasText(applicationId, "applicationId must not be blank");
+        Assert.hasText(versionId, "versionId must not be blank");
 
-        //
-        // Map<String, String> uriVariables = new HashMap<String, String>();
-        // uriVariables.put("applicationId", applicationId);
-        // uriVariables.put("versionId", versionId);
-        //
-        // getRestOperations().put(baseUrl + "/apps/{applicationId}/versions/{versionId}", request, uriVariables);
-        throw new UnsupportedOperationException("not yet implemented");
+        Map<String, String> uriVariables = new HashMap<>();
+        uriVariables.put("applicationId", applicationId);
+        uriVariables.put("versionId", versionId);
+
+        getRestOperations().put(baseUrl + "/apps/{applicationId}/versions/{versionId}", request, uriVariables);
     }
 
     @Override
