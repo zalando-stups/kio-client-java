@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Zalando SE (http://tech.zalando.com)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.zalando.stups.clients.kio.*;
 
 import java.text.ParseException;
@@ -37,9 +38,7 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.slf4j.LoggerFactory.getLogger;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
@@ -95,8 +94,8 @@ public class RestTemplateKioOperationsTest {
         final ZonedDateTime modifiedAfter = now().minusDays(2);
 
         mockServer.expect(requestTo(
-                format("%s/apps?modified_before=%s&modified_after=%s", //
-                        BASE_URL, toIsoString(modifiedBefore), toIsoString(modifiedAfter)))) //
+                UriComponentsBuilder.fromHttpUrl(format("%s/apps?modified_before=%s&modified_after=%s", //
+                        BASE_URL, toIsoString(modifiedBefore), toIsoString(modifiedAfter))).build().encode().toUri())) //
                 .andExpect(method(GET)) //
                 .andRespond(withSuccess(resource("/getApplications"), APPLICATION_JSON));
 
