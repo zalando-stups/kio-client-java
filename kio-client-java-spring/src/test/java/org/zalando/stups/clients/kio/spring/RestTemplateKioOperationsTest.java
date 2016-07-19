@@ -23,7 +23,6 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.zalando.stups.clients.kio.*;
 
 import java.text.ParseException;
@@ -93,9 +92,10 @@ public class RestTemplateKioOperationsTest {
         final ZonedDateTime modifiedBefore = now().plusDays(1);
         final ZonedDateTime modifiedAfter = now().minusDays(2);
 
-        mockServer.expect(requestTo(
-                UriComponentsBuilder.fromHttpUrl(format("%s/apps?modified_before=%s&modified_after=%s", //
-                        BASE_URL, toIsoString(modifiedBefore), toIsoString(modifiedAfter))).build().encode().toUri())) //
+        mockServer.expect(requestTo(format("%s/apps?modified_before=%s&modified_after=%s", //
+                BASE_URL,
+                toIsoString(modifiedBefore).replaceAll("\\+", "%2B"),  //
+                toIsoString(modifiedAfter).replaceAll("\\+", "%2B")))) //
                 .andExpect(method(GET)) //
                 .andRespond(withSuccess(resource("/getApplications"), APPLICATION_JSON));
 
