@@ -131,8 +131,8 @@ public class RestTemplateKioOperationsTest {
         final ZonedDateTime modifiedAfter = now().minusDays(2);
 
         mockServer.expect(requestTo(
-                BASE_URL + "/apps?search=" + query + "&modified_before=" + toIsoString(modifiedBefore)
-                        + "&modified_after=" + toIsoString(modifiedAfter))) //
+                BASE_URL + "/apps?search=" + query + "&modified_before=" + toIsoString(modifiedBefore).replaceAll("\\+", "%2B")
+                        + "&modified_after=" + toIsoString(modifiedAfter).replaceAll("\\+", "%2B"))) //
                 .andExpect(method(GET))                               //
                 .andRespond(withSuccess(resource("/searchApplications"), APPLICATION_JSON));
 
