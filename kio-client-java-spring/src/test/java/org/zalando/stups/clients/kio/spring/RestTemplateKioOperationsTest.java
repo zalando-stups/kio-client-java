@@ -89,13 +89,15 @@ public class RestTemplateKioOperationsTest {
 
     @Test
     public void testGetRangeOfApplications() throws ParseException {
-        final ZonedDateTime modifiedBefore = now().plusDays(1);
-        final ZonedDateTime modifiedAfter = now().minusDays(2);
+
+        final ZonedDateTime modifiedBefore = ZonedDateTime.parse("2000-12-31T00:00:00.000+01:00[Europe/Berlin]");
+        final ZonedDateTime modifiedAfter = ZonedDateTime.parse("2000-01-01T00:00:00.000-11:00[Pacific/Midway]");
+
+        final String modifiedBeforeString = "2000-12-31T00:00:00.000%2B0100";
+        final String modifiedAfterString = "2000-01-01T00:00:00.000-1100";
 
         mockServer.expect(requestTo(format("%s/apps?modified_before=%s&modified_after=%s", //
-                BASE_URL,
-                toIsoString(modifiedBefore).replaceAll("\\+", "%2B"),  //
-                toIsoString(modifiedAfter).replaceAll("\\+", "%2B")))) //
+                BASE_URL, modifiedBeforeString, modifiedAfterString))) //
                 .andExpect(method(GET)) //
                 .andRespond(withSuccess(resource("/getApplications"), APPLICATION_JSON));
 
@@ -127,12 +129,15 @@ public class RestTemplateKioOperationsTest {
     @Test
     public void testSearchApplicationsInRange() throws Exception {
         final String query = "foobar";
-        final ZonedDateTime modifiedBefore = now().plusDays(1);
-        final ZonedDateTime modifiedAfter = now().minusDays(2);
+        final ZonedDateTime modifiedBefore = ZonedDateTime.parse("2000-12-31T00:00:00.000Z");
+        final ZonedDateTime modifiedAfter = ZonedDateTime.parse("2000-01-01T00:00:00.000Z[Greenwich]");
+
+        final String modifiedBeforeString = "2000-12-31T00:00:00.000%2B0000";
+        final String modifiedAfterString = "2000-01-01T00:00:00.000%2B0000";
 
         mockServer.expect(requestTo(
-                BASE_URL + "/apps?search=" + query + "&modified_before=" + toIsoString(modifiedBefore).replaceAll("\\+", "%2B")
-                        + "&modified_after=" + toIsoString(modifiedAfter).replaceAll("\\+", "%2B"))) //
+                BASE_URL + "/apps?search=" + query + "&modified_before=" + modifiedBeforeString
+                        + "&modified_after=" + modifiedAfterString)) //
                 .andExpect(method(GET))                               //
                 .andRespond(withSuccess(resource("/searchApplications"), APPLICATION_JSON));
 
