@@ -7,7 +7,7 @@
     </parent>
     <groupId>org.zalando.stups</groupId>
     <artifactId>kio-client-java</artifactId>
-    <version>0.11.1-SNAPSHOT</version>
+    <version>0.11.2-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>kio-client-java-api</module>
