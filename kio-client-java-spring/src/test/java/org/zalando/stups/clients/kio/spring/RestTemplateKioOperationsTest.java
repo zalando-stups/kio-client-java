@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Zalando SE (http://tech.zalando.com)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,21 +31,17 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static java.time.ZonedDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown;
 import static org.slf4j.LoggerFactory.getLogger;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
-import static org.zalando.stups.clients.kio.spring.DateTimeUtils.toIsoString;
 import static org.zalando.stups.clients.kio.spring.ResourceUtil.resource;
 
 /**
@@ -91,12 +87,15 @@ public class RestTemplateKioOperationsTest {
 
     @Test
     public void testGetRangeOfApplications() throws ParseException {
-        final ZonedDateTime modifiedBefore = now().plusDays(1);
-        final ZonedDateTime modifiedAfter = now().minusDays(2);
 
-        mockServer.expect(requestTo(
-                format("%s/apps?modified_before=%s&modified_after=%s", //
-                        BASE_URL, toIsoString(modifiedBefore), toIsoString(modifiedAfter)))) //
+        final ZonedDateTime modifiedBefore = ZonedDateTime.parse("2000-12-31T00:00:00.000+01:00[Europe/Berlin]");
+        final ZonedDateTime modifiedAfter = ZonedDateTime.parse("2000-01-01T00:00:00.000-11:00[Pacific/Midway]");
+
+        final String modifiedBeforeString = "2000-12-31T00:00:00.000%2B01:00";
+        final String modifiedAfterString = "2000-01-01T00:00:00.000-11:00";
+
+        mockServer.expect(requestTo(format("%s/apps?modified_before=%s&modified_after=%s", //
+                BASE_URL, modifiedBeforeString, modifiedAfterString))) //
                 .andExpect(method(GET)) //
                 .andRespond(withSuccess(resource("/getApplications"), APPLICATION_JSON));
 
@@ -128,12 +127,15 @@ public class RestTemplateKioOperationsTest {
     @Test
     public void testSearchApplicationsInRange() throws Exception {
         final String query = "foobar";
-        final ZonedDateTime modifiedBefore = now().plusDays(1);
-        final ZonedDateTime modifiedAfter = now().minusDays(2);
+        final ZonedDateTime modifiedBefore = ZonedDateTime.parse("2000-12-31T00:00:00.000Z");
+        final ZonedDateTime modifiedAfter = ZonedDateTime.parse("2000-01-01T00:00:00.000Z[Greenwich]");
+
+        final String modifiedBeforeString = "2000-12-31T00:00:00.000Z";
+        final String modifiedAfterString = "2000-01-01T00:00:00.000Z";
 
         mockServer.expect(requestTo(
-                BASE_URL + "/apps?search=" + query + "&modified_before=" + toIsoString(modifiedBefore)
-                        + "&modified_after=" + toIsoString(modifiedAfter))) //
+                BASE_URL + "/apps?search=" + query + "&modified_before=" + modifiedBeforeString
+                        + "&modified_after=" + modifiedAfterString)) //
                 .andExpect(method(GET))                               //
                 .andRespond(withSuccess(resource("/searchApplications"), APPLICATION_JSON));
 

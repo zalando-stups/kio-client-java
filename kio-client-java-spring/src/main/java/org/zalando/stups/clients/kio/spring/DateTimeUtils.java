@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2015 Zalando SE (http://tech.zalando.com)
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,15 +15,18 @@
  */
 package org.zalando.stups.clients.kio.spring;
 
-import static java.time.format.DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAccessor;
 
 public final class DateTimeUtils {
 
-    private DateTimeUtils() { }
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
+    private DateTimeUtils() {
+    }
 
     public static String toIsoString(final TemporalAccessor temporal) {
-        return ISO_OFFSET_DATE_TIME.format(temporal);
+
+        return DATE_TIME_FORMATTER.format(temporal);
     }
 }

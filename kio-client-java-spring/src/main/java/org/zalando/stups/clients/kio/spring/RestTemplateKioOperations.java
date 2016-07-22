@@ -75,7 +75,7 @@ public class RestTemplateKioOperations implements KioOperations {
         modifiedBefore.ifPresent((timestamp) -> uriBuilder.queryParam("modified_before", toIsoString(timestamp)));
         modifiedAfter.ifPresent((timestamp) -> uriBuilder.queryParam("modified_after", toIsoString(timestamp)));
 
-        final URI uri = uriBuilder.build().toUri();
+        final URI uri = uriBuilder.build().encode().toUri();
         return getRestOperations().exchange(get(uri).build(), AS_APP_BASE_LIST).getBody();
     }
 
@@ -89,7 +89,7 @@ public class RestTemplateKioOperations implements KioOperations {
         modifiedBefore.ifPresent((timestamp) -> uriBuilder.queryParam("modified_before", toIsoString(timestamp)));
         modifiedAfter.ifPresent((timestamp) -> uriBuilder.queryParam("modified_after", toIsoString(timestamp)));
 
-        final URI uri = uriBuilder.build().toUri();
+        final URI uri = uriBuilder.build().encode().toUri();
         return getRestOperations().exchange(get(uri).build(), AS_APP_SEARCH_RESULT_LIST).getBody();
     }
 
