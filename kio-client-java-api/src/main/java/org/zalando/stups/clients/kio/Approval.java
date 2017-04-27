@@ -26,7 +26,7 @@ import lombok.EqualsAndHashCode;
  * @author  jbellmann
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class Approval extends ApprovalBase {
 

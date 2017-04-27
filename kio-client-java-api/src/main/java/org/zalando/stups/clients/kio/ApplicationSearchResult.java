@@ -23,7 +23,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class ApplicationSearchResult extends ApplicationBase {
 
