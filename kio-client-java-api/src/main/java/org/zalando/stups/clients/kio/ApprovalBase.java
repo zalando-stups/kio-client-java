@@ -17,6 +17,7 @@ package org.zalando.stups.clients.kio;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -24,6 +25,7 @@ import lombok.EqualsAndHashCode;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode
+@Data
 public class ApprovalBase {
 
     private String notes;
@@ -31,19 +33,4 @@ public class ApprovalBase {
     @JsonProperty("approval_type")
     private String approvalType;
 
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(final String notes) {
-        this.notes = notes;
-    }
-
-    public String getApprovalType() {
-        return approvalType;
-    }
-
-    public void setApprovalType(final String approvalType) {
-        this.approvalType = approvalType;
-    }
 }

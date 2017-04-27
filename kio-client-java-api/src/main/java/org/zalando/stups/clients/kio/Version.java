@@ -21,6 +21,7 @@ import java.util.StringJoiner;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -28,6 +29,7 @@ import lombok.EqualsAndHashCode;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode
+@Data
 public class Version extends VersionBase {
 
     @JsonProperty("last_modified_by")
@@ -39,38 +41,6 @@ public class Version extends VersionBase {
     private String createdBy;
 
     private String notes;
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(final String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public ZonedDateTime getCreated() {
-        return created;
-    }
-
-    public void setCreated(final ZonedDateTime created) {
-        this.created = created;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(final String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(final String notes) {
-        this.notes = notes;
-    }
 
     @Override
     protected void addToStringFields(final StringJoiner fields) {

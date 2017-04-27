@@ -17,10 +17,12 @@ package org.zalando.stups.clients.kio;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode
+@Data
 public class CreateOrUpdateVersionRequest {
 
     @JsonProperty("artifact")
@@ -29,19 +31,4 @@ public class CreateOrUpdateVersionRequest {
     @JsonProperty("notes")
     private String notes;
 
-    public String getArtifact() {
-        return artifact;
-    }
-
-    public void setArtifact(String artifact) {
-        this.artifact = artifact;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(String notes) {
-        this.notes = notes;
-    }
 }

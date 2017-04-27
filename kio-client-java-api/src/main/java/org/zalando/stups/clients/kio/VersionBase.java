@@ -21,10 +21,12 @@ import java.util.StringJoiner;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode
+@Data
 public class VersionBase {
 
     private String id;
@@ -36,38 +38,6 @@ public class VersionBase {
 
     @JsonProperty("last_modified")
     private ZonedDateTime lastModified;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    public String getApplicationId() {
-        return applicationId;
-    }
-
-    public void setApplicationId(final String applicationId) {
-        this.applicationId = applicationId;
-    }
-
-    public String getArtifact() {
-        return artifact;
-    }
-
-    public void setArtifact(final String artifact) {
-        this.artifact = artifact;
-    }
-
-    public ZonedDateTime getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(final ZonedDateTime lastModified) {
-        this.lastModified = lastModified;
-    }
 
     @Override
     public String toString() {
