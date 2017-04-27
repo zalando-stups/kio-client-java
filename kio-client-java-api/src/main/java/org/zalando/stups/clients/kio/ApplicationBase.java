@@ -21,11 +21,13 @@ import java.util.StringJoiner;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author  jbellmann
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@EqualsAndHashCode
 public class ApplicationBase {
 
     private String id;

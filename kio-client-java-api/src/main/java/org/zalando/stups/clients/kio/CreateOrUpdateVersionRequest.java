@@ -17,8 +17,10 @@ package org.zalando.stups.clients.kio;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@EqualsAndHashCode
 public class CreateOrUpdateVersionRequest {
 
     @JsonProperty("artifact")

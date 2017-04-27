@@ -19,8 +19,10 @@ import java.util.StringJoiner;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.EqualsAndHashCode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@EqualsAndHashCode
 public class ApplicationSearchResult extends ApplicationBase {
 
     @JsonProperty("matched_rank")
