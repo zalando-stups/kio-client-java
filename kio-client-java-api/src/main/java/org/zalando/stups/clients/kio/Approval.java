@@ -19,11 +19,15 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author  jbellmann
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class Approval extends ApprovalBase {
 
     @JsonProperty("application_id")
@@ -38,27 +42,4 @@ public class Approval extends ApprovalBase {
     @JsonProperty("approved_at")
     private Date approvedAt;
 
-    public String getVersionId() {
-        return versionId;
-    }
-
-    public void setVersionId(final String versionId) {
-        this.versionId = versionId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(final String userId) {
-        this.userId = userId;
-    }
-
-    public Date getApprovedAt() {
-        return approvedAt;
-    }
-
-    public void setApprovedAt(final Date approvedAt) {
-        this.approvedAt = approvedAt;
-    }
 }

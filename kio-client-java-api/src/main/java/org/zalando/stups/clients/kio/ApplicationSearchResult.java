@@ -19,8 +19,12 @@ import java.util.StringJoiner;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class ApplicationSearchResult extends ApplicationBase {
 
     @JsonProperty("matched_rank")
@@ -28,22 +32,6 @@ public class ApplicationSearchResult extends ApplicationBase {
 
     @JsonProperty("matched_description")
     private String matchedDescription;
-
-    public Float getMatchedRank() {
-        return matchedRank;
-    }
-
-    public void setMatchedRank(final Float matchedRank) {
-        this.matchedRank = matchedRank;
-    }
-
-    public String getMatchedDescription() {
-        return matchedDescription;
-    }
-
-    public void setMatchedDescription(final String matchedDescription) {
-        this.matchedDescription = matchedDescription;
-    }
 
     @Override
     protected void addToStringFields(final StringJoiner fields) {

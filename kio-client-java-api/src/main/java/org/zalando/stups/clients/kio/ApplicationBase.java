@@ -21,11 +21,15 @@ import java.util.StringJoiner;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author  jbellmann
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@EqualsAndHashCode
+@Data
 public class ApplicationBase {
 
     private String id;
@@ -51,78 +55,6 @@ public class ApplicationBase {
 
     @JsonProperty("last_modified")
     private ZonedDateTime lastModified;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    public String getTeamId() {
-        return teamId;
-    }
-
-    public void setTeamId(final String teamId) {
-        this.teamId = teamId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(final String subtitle) {
-        this.subtitle = subtitle;
-    }
-
-    public String getServiceUrl() {
-        return serviceUrl;
-    }
-
-    public void setServiceUrl(final String serviceUrl) {
-        this.serviceUrl = serviceUrl;
-    }
-
-    public String getScmUrl() {
-        return scmUrl;
-    }
-
-    public void setScmUrl(final String scmUrl) {
-        this.scmUrl = scmUrl;
-    }
-
-    public String getDocumentationUrl() {
-        return documentationUrl;
-    }
-
-    public void setDocumentationUrl(final String documentationUrl) {
-        this.documentationUrl = documentationUrl;
-    }
-
-    public String getSpecificationUrl() {
-        return specificationUrl;
-    }
-
-    public void setSpecificationUrl(final String specificationUrl) {
-        this.specificationUrl = specificationUrl;
-    }
-
-    public ZonedDateTime getLastModified() {
-        return lastModified;
-    }
-
-    public void setLastModified(final ZonedDateTime lastModified) {
-        this.lastModified = lastModified;
-    }
 
     @Override
     public String toString() {

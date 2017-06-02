@@ -21,11 +21,15 @@ import java.util.StringJoiner;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author  jbellmann
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class Application extends ApplicationBase {
 
     private boolean active;
@@ -51,78 +55,6 @@ public class Application extends ApplicationBase {
 
     @JsonProperty("publicly_accessible")
     private boolean publiclyAccessible;
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(final boolean active) {
-        this.active = active;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
-    public int getRequiredApprovers() {
-        return requiredApprovers;
-    }
-
-    public void setRequiredApprovers(final int requiredApprovers) {
-        this.requiredApprovers = requiredApprovers;
-    }
-
-    public String getSpecificationType() {
-        return specificationType;
-    }
-
-    public void setSpecificationType(final String specificationType) {
-        this.specificationType = specificationType;
-    }
-
-    public int getCriticalityLevel() {
-        return criticalityLevel;
-    }
-
-    public void setCriticalityLevel(final int criticalityLevel) {
-        this.criticalityLevel = criticalityLevel;
-    }
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(final String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    public ZonedDateTime getCreated() {
-        return created;
-    }
-
-    public void setCreated(final ZonedDateTime created) {
-        this.created = created;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(final String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public boolean isPubliclyAccessible() {
-        return publiclyAccessible;
-    }
-
-    public void setPubliclyAccessible(final boolean publiclyAccessible) {
-        this.publiclyAccessible = publiclyAccessible;
-    }
 
     @Override
     protected void addToStringFields(final StringJoiner fields) {
