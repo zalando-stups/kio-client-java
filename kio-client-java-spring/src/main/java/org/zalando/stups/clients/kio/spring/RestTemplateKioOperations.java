@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2015 Zalando SE (http://tech.zalando.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.zalando.stups.clients.kio.spring;
 
 import org.springframework.core.ParameterizedTypeReference;
@@ -39,20 +24,11 @@ import static org.zalando.stups.clients.kio.spring.DateTimeUtils.toIsoString;
  */
 public class RestTemplateKioOperations implements KioOperations {
 
-    public static final ParameterizedTypeReference<List<String>> AS_STRING_LIST =
-        new ParameterizedTypeReference<List<String>>() { };
-
     private static final ParameterizedTypeReference<List<ApplicationBase>> AS_APP_BASE_LIST =
         new ParameterizedTypeReference<List<ApplicationBase>>() { };
 
     private static final ParameterizedTypeReference<List<ApplicationSearchResult>> AS_APP_SEARCH_RESULT_LIST =
         new ParameterizedTypeReference<List<ApplicationSearchResult>>() { };
-
-    private static final ParameterizedTypeReference<List<VersionBase>> AS_VERSION_LIST =
-        new ParameterizedTypeReference<List<VersionBase>>() { };
-
-    private static final ParameterizedTypeReference<List<Approval>> AS_APPROVAL_LIST =
-        new ParameterizedTypeReference<List<Approval>>() { };
 
     private final RestOperations restOperations;
 
@@ -65,7 +41,7 @@ public class RestTemplateKioOperations implements KioOperations {
 
     @Override
     public List<ApplicationBase> listApplications() {
-        return listApplications(Optional.<ZonedDateTime>empty(), Optional.<ZonedDateTime>empty());
+        return listApplications(Optional.empty(), Optional.empty());
     }
 
     @Override
@@ -108,99 +84,6 @@ public class RestTemplateKioOperations implements KioOperations {
         final Map<String, String> uriVariables = new HashMap<>();
         uriVariables.put("applicationId", applicationId);
         getRestOperations().put(baseUrl + "/apps/{applicationId}", request, uriVariables);
-    }
-
-    /**
-     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
-     *   i.e. you don't have to maintain version information in Kio anymore.
-     *   The corresponding API endpoints will be disabled on July 31st, 2017.
-     */
-    @Deprecated
-    @Override
-    public List<String> getApplicationApprovalTypes(final String applicationId) {
-        Assert.hasText(applicationId, "applicationId must not be blank");
-
-        final URI uri = URI.create(baseUrl + "/apps/" + applicationId + "/approvals");
-        return getRestOperations().exchange(get(uri).build(), AS_STRING_LIST).getBody();
-    }
-
-    /**
-     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
-     *   i.e. you don't have to maintain version information in Kio anymore.
-     *   The corresponding API endpoints will be disabled on July 31st, 2017.
-     */
-    @Deprecated
-    @Override
-    public List<VersionBase> getApplicationVersions(final String applicationId) {
-        Assert.hasText(applicationId, "applicationId must not be blank");
-
-        final URI uri = URI.create(baseUrl + "/apps/" + applicationId + "/versions");
-        return getRestOperations().exchange(get(uri).build(), AS_VERSION_LIST).getBody();
-    }
-
-    /**
-     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
-     *   i.e. you don't have to maintain version information in Kio anymore.
-     *   The corresponding API endpoints will be disabled on July 31st, 2017.
-     */
-    @Deprecated
-    @Override
-    public Version getApplicationVersion(final String applicationId, final String versionId) {
-        Assert.hasText(applicationId, "applicationId must not be blank");
-        Assert.hasText(versionId, "versionId must not be blank");
-
-        final URI uri = URI.create(baseUrl + "/apps/" + applicationId + "/versions/" + versionId);
-        return getRestOperations().getForObject(uri, Version.class);
-    }
-
-    /**
-     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
-     *   i.e. you don't have to maintain version information in Kio anymore.
-     *   The corresponding API endpoints will be disabled on July 31st, 2017.
-     */
-    @Deprecated
-    @Override
-    public void createOrUpdateVersion(final CreateOrUpdateVersionRequest request, final String applicationId,
-            final String versionId) {
-        Assert.hasText(applicationId, "applicationId must not be blank");
-        Assert.hasText(versionId, "versionId must not be blank");
-
-        Map<String, String> uriVariables = new HashMap<>();
-        uriVariables.put("applicationId", applicationId);
-        uriVariables.put("versionId", versionId);
-
-        getRestOperations().put(baseUrl + "/apps/{applicationId}/versions/{versionId}", request, uriVariables);
-    }
-
-    /**
-     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
-     *   i.e. you don't have to maintain version information in Kio anymore.
-     *   The corresponding API endpoints will be disabled on July 31st, 2017.
-     */
-    @Deprecated
-    @Override
-    public List<Approval> getApplicationVersionApprovals(final String applicationId, final String versionId) {
-        Assert.hasText(applicationId, "applicationId must not be blank");
-        Assert.hasText(versionId, "versionId must not be blank");
-
-        final URI uri = URI.create(baseUrl + "/apps/" + applicationId + "/versions/" + versionId + "/approvals");
-        return getRestOperations().exchange(get(uri).build(), AS_APPROVAL_LIST).getBody();
-    }
-
-    /**
-     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
-     *   i.e. you don't have to maintain version information in Kio anymore.
-     *   The corresponding API endpoints will be disabled on July 31st, 2017.
-     */
-    @Deprecated
-    @Override
-    public void approveApplicationVersion(final ApprovalBase request, final String applicationId,
-            final String versionId) {
-        Assert.hasText(applicationId, "applicationId must not be blank");
-        Assert.hasText(versionId, "versionId must not be blank");
-
-        final URI uri = URI.create(baseUrl + "/apps/" + applicationId + "/versions/" + versionId + "/approvals");
-        getRestOperations().postForObject(uri, request, Void.class);
     }
 
     protected RestOperations getRestOperations() {
