@@ -24,10 +24,14 @@ import lombok.EqualsAndHashCode;
 
 /**
  * @author  jbellmann
+ * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
+ *   i.e. you don't have to maintain version information in Kio anymore.
+ *   The corresponding API endpoints will be disabled on July 31st, 2017.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = true)
 @Data
+@Deprecated
 public class Approval extends ApprovalBase {
 
     @JsonProperty("application_id")

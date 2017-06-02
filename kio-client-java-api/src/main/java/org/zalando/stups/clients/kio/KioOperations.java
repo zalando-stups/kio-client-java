@@ -56,17 +56,51 @@ public interface KioOperations {
 
     /**
      * Returns a list of all approval types for the specified applicationId.
+     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
+     *   i.e. you don't have to maintain version information in Kio anymore.
+     *   The corresponding API endpoints will be disabled on July 31st, 2017.
      */
+    @Deprecated
     List<String> getApplicationApprovalTypes(String applicationId);
 
+    /**
+     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
+     *   i.e. you don't have to maintain version information in Kio anymore.
+     *   The corresponding API endpoints will be disabled on July 31st, 2017.
+     */
+    @Deprecated
     List<VersionBase> getApplicationVersions(String applicationId);
 
+    /**
+     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
+     * i.e. you don't have to maintain version information in Kio anymore.
+     * The corresponding API endpoints will be disabled on July 31st, 2017.
+     */
+    @Deprecated
     Version getApplicationVersion(String applicationId, String versionId);
 
+    /**
+     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
+     *   i.e. you don't have to maintain version information in Kio anymore.
+     *   The corresponding API endpoints will be disabled on July 31st, 2017.
+     */
+    @Deprecated
     void createOrUpdateVersion(CreateOrUpdateVersionRequest request, String applicationId, String versionId);
 
+    /**
+     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
+     *   i.e. you don't have to maintain version information in Kio anymore.
+     *   The corresponding API endpoints will be disabled on July 31st, 2017.
+     */
+    @Deprecated
     List<Approval> getApplicationVersionApprovals(String applicationId, String versionId);
 
+    /**
+     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
+     *   i.e. you don't have to maintain version information in Kio anymore.
+     *   The corresponding API endpoints will be disabled on July 31st, 2017.
+     */
+    @Deprecated
     void approveApplicationVersion(ApprovalBase request, String applicationId, String versionId);
 
 }
