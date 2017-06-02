@@ -1,18 +1,3 @@
-/**
- * Copyright (C) 2015 Zalando SE (http://tech.zalando.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.zalando.stups.clients.kio;
 
 import java.time.ZonedDateTime;
@@ -53,54 +38,4 @@ public interface KioOperations {
      * Creates or updates an application.
      */
     void createOrUpdateApplication(CreateOrUpdateApplicationRequest request, String applicationId);
-
-    /**
-     * Returns a list of all approval types for the specified applicationId.
-     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
-     *   i.e. you don't have to maintain version information in Kio anymore.
-     *   The corresponding API endpoints will be disabled on July 31st, 2017.
-     */
-    @Deprecated
-    List<String> getApplicationApprovalTypes(String applicationId);
-
-    /**
-     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
-     *   i.e. you don't have to maintain version information in Kio anymore.
-     *   The corresponding API endpoints will be disabled on July 31st, 2017.
-     */
-    @Deprecated
-    List<VersionBase> getApplicationVersions(String applicationId);
-
-    /**
-     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
-     * i.e. you don't have to maintain version information in Kio anymore.
-     * The corresponding API endpoints will be disabled on July 31st, 2017.
-     */
-    @Deprecated
-    Version getApplicationVersion(String applicationId, String versionId);
-
-    /**
-     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
-     *   i.e. you don't have to maintain version information in Kio anymore.
-     *   The corresponding API endpoints will be disabled on July 31st, 2017.
-     */
-    @Deprecated
-    void createOrUpdateVersion(CreateOrUpdateVersionRequest request, String applicationId, String versionId);
-
-    /**
-     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
-     *   i.e. you don't have to maintain version information in Kio anymore.
-     *   The corresponding API endpoints will be disabled on July 31st, 2017.
-     */
-    @Deprecated
-    List<Approval> getApplicationVersionApprovals(String applicationId, String versionId);
-
-    /**
-     * @deprecated Please note that the GitHub approval flow obsoletes Kio versions,
-     *   i.e. you don't have to maintain version information in Kio anymore.
-     *   The corresponding API endpoints will be disabled on July 31st, 2017.
-     */
-    @Deprecated
-    void approveApplicationVersion(ApprovalBase request, String applicationId, String versionId);
-
 }
