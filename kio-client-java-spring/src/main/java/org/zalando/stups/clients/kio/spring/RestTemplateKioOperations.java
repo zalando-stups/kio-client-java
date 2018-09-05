@@ -24,12 +24,6 @@ import static org.zalando.stups.clients.kio.spring.DateTimeUtils.toIsoString;
  */
 public class RestTemplateKioOperations implements KioOperations {
 
-    private static final ParameterizedTypeReference<List<ApplicationBase>> AS_APP_BASE_LIST =
-        new ParameterizedTypeReference<List<ApplicationBase>>() { };
-
-    private static final ParameterizedTypeReference<List<ApplicationSearchResult>> AS_APP_SEARCH_RESULT_LIST =
-        new ParameterizedTypeReference<List<ApplicationSearchResult>>() { };
-
     private final RestOperations restOperations;
 
     private final String baseUrl;
@@ -47,12 +41,13 @@ public class RestTemplateKioOperations implements KioOperations {
     @Override
     public List<ApplicationBase> listApplications(final Optional<ZonedDateTime> modifiedBefore,
             final Optional<ZonedDateTime> modifiedAfter) {
+        ParameterizedTypeReference<List<ApplicationBase>> typeReference = new ParameterizedTypeReference<List<ApplicationBase>>() { };
         final UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl).pathSegment("apps");
         modifiedBefore.ifPresent((timestamp) -> uriBuilder.queryParam("modified_before", toIsoString(timestamp)));
         modifiedAfter.ifPresent((timestamp) -> uriBuilder.queryParam("modified_after", toIsoString(timestamp)));
 
         final URI uri = uriBuilder.build().encode().toUri();
-        return getRestOperations().exchange(get(uri).build(), AS_APP_BASE_LIST).getBody();
+        return getRestOperations().exchange(get(uri).build(), typeReference).getBody();
     }
 
     @Override
@@ -60,13 +55,14 @@ public class RestTemplateKioOperations implements KioOperations {
             final Optional<ZonedDateTime> modifiedBefore, final Optional<ZonedDateTime> modifiedAfter) {
         Assert.hasText(query, "search query must not be blank");
 
+        ParameterizedTypeReference<List<ApplicationSearchResult>> typeReference = new ParameterizedTypeReference<List<ApplicationSearchResult>>() { };
         final UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl).pathSegment("apps");
         uriBuilder.queryParam("search", query);
         modifiedBefore.ifPresent((timestamp) -> uriBuilder.queryParam("modified_before", toIsoString(timestamp)));
         modifiedAfter.ifPresent((timestamp) -> uriBuilder.queryParam("modified_after", toIsoString(timestamp)));
 
         final URI uri = uriBuilder.build().encode().toUri();
-        return getRestOperations().exchange(get(uri).build(), AS_APP_SEARCH_RESULT_LIST).getBody();
+        return getRestOperations().exchange(get(uri).build(), typeReference).getBody();
     }
 
     @Override
