@@ -24,10 +24,10 @@ import static org.zalando.stups.clients.kio.spring.DateTimeUtils.toIsoString;
  */
 public class RestTemplateKioOperations implements KioOperations {
 
-    private static final ParameterizedTypeReference<List<ApplicationBase>> AS_APP_BASE_LIST =
+    private ParameterizedTypeReference<List<ApplicationBase>> AS_APP_BASE_LIST =
         new ParameterizedTypeReference<List<ApplicationBase>>() { };
 
-    private static final ParameterizedTypeReference<List<ApplicationSearchResult>> AS_APP_SEARCH_RESULT_LIST =
+    private ParameterizedTypeReference<List<ApplicationSearchResult>> AS_APP_SEARCH_RESULT_LIST =
         new ParameterizedTypeReference<List<ApplicationSearchResult>>() { };
 
     private final RestOperations restOperations;
@@ -47,6 +47,7 @@ public class RestTemplateKioOperations implements KioOperations {
     @Override
     public List<ApplicationBase> listApplications(final Optional<ZonedDateTime> modifiedBefore,
             final Optional<ZonedDateTime> modifiedAfter) {
+        ParameterizedTypeReference<List<ApplicationBase>> typeReference = new ParameterizedTypeReference<List<ApplicationBase>>() { };
         final UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl).pathSegment("apps");
         modifiedBefore.ifPresent((timestamp) -> uriBuilder.queryParam("modified_before", toIsoString(timestamp)));
         modifiedAfter.ifPresent((timestamp) -> uriBuilder.queryParam("modified_after", toIsoString(timestamp)));
